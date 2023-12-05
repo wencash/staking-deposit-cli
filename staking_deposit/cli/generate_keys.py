@@ -1,5 +1,6 @@
 import os
 import click
+import json
 from typing import (
     Any,
     Callable,
@@ -35,6 +36,7 @@ from staking_deposit.settings import (
     MAINNET,
     PRATER,
     get_chain_setting,
+    get_devnet_chain_setting,
 )
 
 
@@ -104,6 +106,12 @@ def generate_keys_arguments_decorator(function: Callable[..., Any]) -> Callable[
             help=lambda: load_text(['arg_execution_address', 'help'], func='generate_keys_arguments_decorator'),
             param_decls=['--execution_address', '--eth1_withdrawal_address'],
         ),
+        jit_option(
+            # Only for devnet tests
+            default=None,
+            help="[DEVNET ONLY] Set specific GENESIS_FORK_VERSION value",
+            param_decls='--devnet_chain_setting',
+        ),
     ]
     for decorator in reversed(decorators):
         function = decorator(function)
@@ -114,12 +122,23 @@ def generate_keys_arguments_decorator(function: Callable[..., Any]) -> Callable[
 @click.pass_context
 def generate_keys(ctx: click.Context, validator_start_index: int,
                   num_validators: int, folder: str, chain: str, keystore_password: str,
-                  execution_address: HexAddress, **kwargs: Any) -> None:
+                  execution_address: HexAddress, devnet_chain_setting: str, **kwargs: Any) -> None:
     mnemonic = ctx.obj['mnemonic']
     mnemonic_password = ctx.obj['mnemonic_password']
     amounts = [MAX_DEPOSIT_AMOUNT] * num_validators
     folder = os.path.join(folder, DEFAULT_VALIDATOR_KEYS_FOLDER_NAME)
+    # Get chain setting
     chain_setting = get_chain_setting(chain)
+
+    if devnet_chain_setting is not None:
+        click.echo('\n%s\n' % '**[Warning] Using devnet chain setting to generate the keys.**\t')
+        devnet_chain_setting_dict = json.loads(devnet_chain_setting)
+        chain_setting = get_devnet_chain_setting(
+            network_name=devnet_chain_setting_dict['network_name'],
+            genesis_fork_version=devnet_chain_setting_dict['genesis_fork_version'],
+            genesis_validator_root=devnet_chain_setting_dict['genesis_validator_root'],
+        )
+    
     if not os.path.exists(folder):
         os.mkdir(folder)
     click.clear()

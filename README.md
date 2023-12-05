@@ -72,6 +72,8 @@
 
 ## Introduction
 
+**/!\ This is a forked version of [Ethereum Staking Deposit Tool](https://github.com/ethereum/staking-deposit-cli) for the Wencash Blockchain, adding the `--devnet_chain_setting` for `new-mnemonic` and `existing-mnemonic` commands.  Use this tool carefully by knowing what you are doing. /!\\**
+
 `deposit-cli` is a tool for creating [EIP-2335 format](https://eips.ethereum.org/EIPS/eip-2335) BLS12-381 keystores and a corresponding `deposit_data*.json` file for [Ethereum Staking Launchpad](https://github.com/ethereum/staking-launchpad).
 
 - **Warning: Please generate your keystores on your own safe, completely offline device.**
@@ -150,6 +152,7 @@ You can use `new-mnemonic --help` to see all arguments. Note that if there are m
 | `--folder` | String. Pointing to `./validator_keys` by default | The folder path for the keystore(s) and deposit(s) |
 | `--chain` | String. `mainnet` by default | The chain setting for the signing domain. |
 | `--execution_address` (or `--eth1_withdrawal_address`) | String. Eth1 address in hexadecimal encoded form | If this field is set and valid, the given Eth1 address will be used to create the withdrawal credentials. Otherwise, it will generate withdrawal credentials with the mnemonic-derived withdrawal public key in [ERC-2334 format](https://eips.ethereum.org/EIPS/eip-2334#eth2-specific-parameters). |
+| `--devnet_chain_setting` | String. JSON string `'{"network_name": "<NETWORK_NAME>", "genesis_fork_version": "<GENESIS_FORK_VERSION>", "genesis_validator_root": "<GENESIS_VALIDATOR_ROOT>"}'` | The custom chain setting of a devnet or testnet. Note that it will override your `--chain` choice. |
 
 ###### `existing-mnemonic` Arguments
 
@@ -162,6 +165,7 @@ You can use `existing-mnemonic --help` to see all arguments. Note that if there 
 | `--folder` | String. Pointing to `./validator_keys` by default | The folder path for the keystore(s) and deposit(s) |
 | `--chain` | String. `mainnet` by default | The chain setting for the signing domain. |
 | `--execution_address` (or `--eth1_withdrawal_address`) | String. Eth1 address in hexadecimal encoded form | If this field is set and valid, the given Eth1 address will be used to create the withdrawal credentials. Otherwise, it will generate withdrawal credentials with the mnemonic-derived withdrawal public key in [ERC-2334 format](https://eips.ethereum.org/EIPS/eip-2334#eth2-specific-parameters). |
+| `--devnet_chain_setting` | String. JSON string `'{"network_name": "<NETWORK_NAME>", "genesis_fork_version": "<GENESIS_FORK_VERSION>", "genesis_validator_root": "<GENESIS_VALIDATOR_ROOT>"}'` | The custom chain setting of a devnet or testnet. Note that it will override your `--chain` choice. |
 
 ###### Successful message
 
